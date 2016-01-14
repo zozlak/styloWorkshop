@@ -7,13 +7,13 @@ texts = get.texts()
 texts %>%
   filter(source %in% 'abacus') %>%
   mutate(year = substr(date, 1, 4)) %>%
-  write.corpus('year', 'title', 'corpus')
+  write.corpus('year', 'title', 'ca_mds_corpus')
 
 par(mfrow = c(2, 2))# to see many graphs at time
 
 # 1) CA on 200 most frequent bigrams with Delta metric and ward linking
 features1 = load.corpus.and.parse(
-  corpus.dir = 'corpus',
+  corpus.dir = 'ca_mds_corpus',
   language = 'German',
   features = 'w',
   ngram.size = 1,
@@ -43,7 +43,7 @@ results2 = stylo(
 
 # 3) CA on 200 most frequent words, single metric and complete linking
 features3 = load.corpus.and.parse(
-  corpus.dir = 'corpus',
+  corpus.dir = 'ca_mds_corpus',
   language = 'German',
   features = 'w',
   ngram.size = 1,

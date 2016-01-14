@@ -7,13 +7,13 @@ texts = get.texts()
 texts %>%
   filter(docsrc %in% c('SPORTZTG', 'PROFIL', 'WOMAN')) %>%
   mutate(year = substr(date, 1, 4)) %>%
-  write.corpus('docsrc', 'year', 'corpus', 0.1)
+  write.corpus('docsrc', 'year', 'pca_corpus', 0.1)
 
 par(mfrow = c(1, 2)) # to see 2 plots next to each other
 
 # 1st variant - single words
 features1 = load.corpus.and.parse(
-  corpus.dir = 'corpus',
+  corpus.dir = 'pca_corpus',
   language = 'German',
   features = 'w',
   ngram.size = 1,
@@ -33,7 +33,7 @@ results1 = stylo(
 
 # 2nd variant - bigrams
 features2 = load.corpus.and.parse(
-  corpus.dir = 'corpus',
+  corpus.dir = 'pca_corpus',
   language = 'German',
   features = 'w',
   ngram.size = 2,

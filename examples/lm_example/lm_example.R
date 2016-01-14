@@ -11,11 +11,11 @@ texts = get.texts() %>%
 # each group limited to ~200k characters
 texts  %>%
   filter(source %in% 'amc', month %in% c('02', '04', '07', '12')) %>%
-  write.corpus('docsrc', c('year', 'month'), 'corpus', 0.02, 200*10^3)
+  write.corpus('docsrc', c('year', 'month'), 'lm_corpus', 0.02, 200*10^3)
 
 # word bigrams
 features = load.corpus.and.parse(
-  corpus.dir = 'corpus',
+  corpus.dir = 'lm_corpus',
   language = 'German',
   features = 'w',
   ngram.size = 2,
