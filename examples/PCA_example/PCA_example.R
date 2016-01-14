@@ -1,5 +1,5 @@
 library(styloWorkshop)
-db.connect('stylometry', '127.0.0.1', 'zozlak', NULL)
+db.connect()
 
 texts = get.texts()
 
