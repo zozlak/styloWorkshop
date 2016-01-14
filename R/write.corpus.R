@@ -17,14 +17,10 @@
 #'   # connect to the texts database
 #'   db.connect()
 #'   
-#'   # fetch and filter texts
+#'   # fetch all texts from the "British Fiction" source
 #'   allTexts = get.texts()
 #'   interestingTexts = allTexts %>%
-#'     filter(
-#'       author %in% c('ABronte', 'CBronte', 'EBronte', 'Austen', 'Dickens', 
-#'         'Eliot', 'Fielding', 'Richardson', 'Sterne', 'Thackeray', 'Trollope')
-#'     ) %>%
-#'     collect()
+#'     filter(source == 'British Fiction')
 #'   
 #'   # write to disk in the stylo package format
 #'   # (for the stylo() function, so in directory called "corpus")
@@ -35,12 +31,7 @@
 #'   # (for the classify() function, so there are two sets of text in 
 #'   #   directories "primary_set" and "secondary_set")
 #'   # taking the author as a main category and the title as a subcategory
-#'   primarySet = interestingTexts %>%
-#'     group_by(author) %>%
-#'     sample_frac(0.7) # assign 70% of each uthors' texts to the primary set
-#'   secondarySet = interestingTexts %>%
-#'     anti_join(primarySet %>% select(text_id)) # all other goes to secondary set
-#'   write.corpus(primarySet, 'author', 'title', 'primary_set')
+#'   secondarySet = write.corpus(interestingTexts, 'author', 'title', 'primary_set', 0.7)
 #'   write.corpus(secondarySet, 'author', 'title', 'secondary_set')
 #' }
 write.corpus = function(data, groupBy1 = character(), groupBy2 = character(), directory = 'corpus', sample = 1, limit = 10^7){
@@ -52,38 +43,69 @@ write.corpus = function(data, groupBy1 = character(), groupBy2 = character(), di
     is.vector(sample), is.numeric(sample), length(sample) == 1, all(!is.na(sample)), all(sample >= 0), all(sample <= 1),
     is.vector(limit), is.numeric(limit), length(limit) == 1, all(!is.na(limit))
   )
+  if(exists('.src', 1)){
+    src = get('.src', 1)
+  }else{
+    stop('run db.connect() first')
+  }
   if(is(data, 'tbl_sql')){
     data = collect(data)
   }
   
+  toWrite = data
   if(length(groupBy1) == 0){
-    data$group1 = data$text_id 
+    toWrite$group1 = data$text_id 
   }else{
-    data$group1 = do.call('paste', data[, groupBy1])
+    toWrite$group1 = do.call('paste', data[, groupBy1])
   }
-  data$group1 = sub('_', '', data$group1)
+  toWrite$group1 = sub('_', '', toWrite$group1)
   
   if(length(groupBy2) == 0){
-    data$group2 = data$text_id 
+    toWrite$group2 = data$text_id 
   }else{
-    data$group2 = do.call('paste', data[, groupBy2])
+    toWrite$group2 = do.call('paste', data[, groupBy2])
   }
-  data$group2 = sub('_', '', data$group2)
+  toWrite$group2 = sub('_', '', toWrite$group2)
   
-  data$title = paste(data$group1, data$group2, sep = '_')
+  toWrite = toWrite %>%
+    select_('text_id', 'group1', 'group2', 'nchar')
   
-  data = group_by_(data, 'title')
-  data = data %>%
-    mutate_(
-      nchar = ~ cumsum(nchar)
-    ) %>%
-    filter_(~ nchar < limit) %>%
-    summarize_(text  = ~ paste(text, collapse = '\n'))
+  result = NULL
+  if(sample < 1){
+    toWrite = toWrite %>%
+      group_by_('group1') %>%
+      sample_frac(sample)
+    result = data %>% 
+      anti_join(toWrite %>% select_('text_id'))
+  }
 
+  write.title = function(data){
+    data = data %>%
+      summarize_(
+        title = ~ paste(first(group1), first(group2), sep = '_'),
+        text  = ~ paste(text, collapse = '\n')
+      )
+    path = paste(directory, paste0(sub('[/\\\\]', '_', data$title[1]), '.txt'), sep = '/')
+    writeLines(data$text[1], path)
+    return(1)
+  }
+  
   if(!dir.exists(directory)){
     dir.create(directory, recursive = TRUE)
   }
-  for(i in seq_along(data$title)){
-    writeLines(data$text[i], paste(directory, paste0(sub('[/\\\\]', '_', data$title[i]), '.txt'), sep = '/'))
-  }
+  
+  toWrite %>% 
+    group_by_('group1', 'group2') %>%
+    mutate_(nchar = ~ cumsum(nchar)) %>%
+    filter_(~ nchar < limit)
+  
+  texts = tbl(src, sql("SELECT text_id, text FROM texts")) %>%
+    semi_join(data %>% select_('text_id'), copy = TRUE) %>%
+    collect()
+  
+  toWrite %>%
+    inner_join(texts) %>%
+    do_(res = ~ write.title(.))
+    
+  return(result)
 }
