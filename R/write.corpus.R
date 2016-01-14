@@ -94,13 +94,13 @@ write.corpus = function(data, groupBy1 = character(), groupBy2 = character(), di
     dir.create(directory, recursive = TRUE)
   }
   
-  toWrite %>% 
+  toWrite = toWrite %>% 
     group_by_('group1', 'group2') %>%
     mutate_(nchar = ~ cumsum(nchar)) %>%
     filter_(~ nchar < limit)
   
   texts = tbl(src, sql("SELECT text_id, text FROM texts")) %>%
-    semi_join(data %>% select_('text_id'), copy = TRUE) %>%
+    semi_join(toWrite %>% select_('text_id'), copy = TRUE) %>%
     collect()
   
   toWrite %>%
