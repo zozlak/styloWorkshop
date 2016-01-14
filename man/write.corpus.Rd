@@ -34,14 +34,10 @@ writes texts to a disk in a format supported by the stylo package
   # connect to the texts database
   db.connect()
 
-  # fetch and filter texts
+  # fetch all texts from the "British Fiction" source
   allTexts = get.texts()
   interestingTexts = allTexts \%>\%
-    filter(
-      author \%in\% c('ABronte', 'CBronte', 'EBronte', 'Austen', 'Dickens',
-        'Eliot', 'Fielding', 'Richardson', 'Sterne', 'Thackeray', 'Trollope')
-    ) \%>\%
-    collect()
+    filter(source == 'British Fiction')
 
   # write to disk in the stylo package format
   # (for the stylo() function, so in directory called "corpus")
@@ -52,12 +48,7 @@ writes texts to a disk in a format supported by the stylo package
   # (for the classify() function, so there are two sets of text in
   #   directories "primary_set" and "secondary_set")
   # taking the author as a main category and the title as a subcategory
-  primarySet = interestingTexts \%>\%
-    group_by(author) \%>\%
-    sample_frac(0.7) # assign 70\% of each uthors' texts to the primary set
-  secondarySet = interestingTexts \%>\%
-    anti_join(primarySet \%>\% select(text_id)) # all other goes to secondary set
-  write.corpus(primarySet, 'author', 'title', 'primary_set')
+  secondarySet = write.corpus(interestingTexts, 'author', 'title', 'primary_set', 0.7)
   write.corpus(secondarySet, 'author', 'title', 'secondary_set')
 }
 }

@@ -9,5 +9,5 @@ get.texts = function(){
   }else{
     stop('run db.connect() first')
   }
-  return(dplyr::tbl(src, 'texts') %>% select_('-text', '-head', '-doc_id') %>% collect())
+  return(dplyr::tbl(src, sql('SELECT text_id, source, date::text, author, title, docsrc, nchar FROM texts')) %>% collect())
 }

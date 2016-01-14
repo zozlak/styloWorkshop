@@ -4,8 +4,8 @@
 \alias{db.connect}
 \title{establishes connection with the corpus database}
 \usage{
-db.connect(dbname = "stylometry", host = NULL, user = NULL,
-  password = NULL, ...)
+db.connect(dbname = "styloworkshop", host = "helios.arz.oeaw.ac.at",
+  user = "styloworkshop", password = "95CrQCvwP6", ...)
 }
 \arguments{
 \item{dbname}{database name}
