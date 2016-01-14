@@ -9,7 +9,7 @@
 #' @param ... other parameters to be passed to dplyr::src_postgres
 #' @return connection
 #' @export
-db.connect = function(dbname = 'stylometry', host = NULL, user = NULL, password = NULL, ...){
+db.connect = function(dbname = 'styloworkshop', host = 'helios.arz.oeaw.ac.at', user = 'styloworkshop', password = '95CrQCvwP6', ...){
   src = dplyr::src_postgres(dbname, host, user, password, ...)
   assign('.src', src, 1)
   return(invisible(src))
