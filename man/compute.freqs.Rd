@@ -4,15 +4,15 @@
 \alias{compute.freqs}
 \title{converts stylo.corpus into features frequency matrix}
 \usage{
-\method{compute}{freqs}(corpus, absent.sensitive = TRUE, relative = TRUE)
+\method{compute}{freqs}(corpus, relative = TRUE, absent.sensitive = TRUE)
 }
 \arguments{
 \item{corpus}{stylo.corpus object (obtained from
 \code{\link{parse.corpus}})}
 
-\item{absent.sensitive}{see \code{\link{make.table.of.frequencies}}}
-
 \item{relative}{should frequencies be relative to text length or absolute}
+
+\item{absent.sensitive}{see \code{\link{make.table.of.frequencies}}}
 }
 \description{
 converts stylo.corpus into features frequency matrix
