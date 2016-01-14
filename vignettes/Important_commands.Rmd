@@ -102,7 +102,7 @@ features = load.corpus.and.parse(
 
 Compute frequency table using relative frequencies from parsed features
 ```{r, eval = FALSE}
-freqTab = compute.freqs(features, relative = TRUE)
+freqTab = count.freqs(features, relative = TRUE)
 ```
 
 ### Features frequency table manipulation

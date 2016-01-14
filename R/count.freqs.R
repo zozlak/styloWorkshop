@@ -6,7 +6,7 @@
 #' @seealso \code{\link{make.table.of.frequencies}}, 
 #'   \code{\link{parse.corpus}}
 #' @export
-compute.freqs = function(corpus, relative = TRUE, absent.sensitive = TRUE){
+count.freqs = function(corpus, relative = TRUE, absent.sensitive = TRUE){
   stopifnot(
     is(corpus, 'stylo.corpus')
   )
