@@ -1,0 +1,19 @@
+Package: styloWorkshop
+Title: Tools for a stylo package workshop
+Description: Tools for a stylo package workshop.
+Version: 0.1
+Author: Mateusz Zoltak <mateusz.zoltak@oeaw.ac.at>
+Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
+Depends: 
+    stylo (>= 0.6),
+    dplyr (>= 0.4)
+Imports:
+Suggests: 
+    RPostgreSQL,
+    testthat,
+    knitr,
+    stringi
+License: MIT + file LICENSE
+NeedsCompilation: no
+Encoding: UTF-8
+VignetteBuilder: knitr
