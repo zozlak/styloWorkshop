@@ -188,12 +188,12 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">20</span>):fNumber
 <li>Limit features frequency table to a given number of features
 <ul>
 <li><p>take 200 most frequent ones</p>
-<pre class="sourceCode r"><code class="sourceCode r">freqTab[, <span class="dv">1</span>:<span class="dv">200</span>]</code></pre></li>
+<pre class="sourceCode r"><code class="sourceCode r">freqTabAdj =<span class="st"> </span>freqTab[, <span class="dv">1</span>:<span class="dv">200</span>]</code></pre></li>
 <li><p>take 50 less frequent one</p>
 <pre class="sourceCode r"><code class="sourceCode r">fNumber =<span class="st"> </span><span class="kw">ncol</span>(freqTab)
-freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber]</code></pre></li>
+freqTabAdj =<span class="st"> </span>freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber]</code></pre></li>
 <li><p>take ones from 50 to 250</p>
-<pre class="sourceCode r"><code class="sourceCode r">freqTab[, <span class="dv">50</span>:<span class="dv">250</span>]</code></pre></li>
+<pre class="sourceCode r"><code class="sourceCode r">freqTabAdj =<span class="st"> </span>freqTab[, <span class="dv">50</span>:<span class="dv">250</span>]</code></pre></li>
 </ul></li>
 <li><p>(Culling) Drop features present in less then 30% of texts (limit number of features in your table first if you don’t want to wait ages!)</p>
 <pre class="sourceCode r"><code class="sourceCode r">freqTabAdj =<span class="st"> </span><span class="kw">perform.culling</span>(freqTab, <span class="dv">30</span>)</code></pre></li>
@@ -268,6 +268,9 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber
 <div id="classification" class="section level2">
 <h2>Classification</h2>
 <p>(assuming that <em>trainFreqTab</em> variable holds features frequency table for the training set and <em>testFreqTab</em> holds one for the test set)</p>
+<p>Obtaining information on misclassification after running analysis:</p>
+<pre class="sourceCode r"><code class="sourceCode r">summary =<span class="st"> </span><span class="kw">paste</span>(<span class="kw">readLines</span>(<span class="st">'final_results.txt'</span>), <span class="dt">collapse =</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)
+<span class="kw">cat</span>(summary)</code></pre>
 <div id="delta" class="section level3">
 <h3>Delta</h3>
 <pre class="sourceCode r"><code class="sourceCode r">results =<span class="st"> </span><span class="kw">classify</span>(
@@ -279,6 +282,9 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber
   <span class="dt">classification.method =</span> <span class="st">'delta'</span>,
   <span class="dt">distance.measure =</span> <span class="st">'delta'</span>, <span class="co"># distance metric delta/argamon/eder/simple/manhattan/canberra/euclidean/cosine</span>
 )</code></pre>
+<div style="page-break-after: always;">
+
+</div>
 </div>
 <div id="k-nearest-neighbors" class="section level3">
 <h3>k-Nearest Neighbors</h3>
@@ -286,8 +292,7 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber
   <span class="dt">gui =</span> <span class="ot">FALSE</span>,
   <span class="dt">training.frequencies =</span> trainFreqTab,
   <span class="dt">test.frequencies =</span> testFreqTab,
-  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),
-  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
+  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
   <span class="dt">classification.method =</span> <span class="st">'knn'</span>,
   <span class="dt">k.value =</span> <span class="dv">1</span> <span class="co"># number of neighbors taken into account</span>
 )</code></pre>
@@ -298,8 +303,7 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber
   <span class="dt">gui =</span> <span class="ot">FALSE</span>,
   <span class="dt">training.frequencies =</span> trainFreqTab,
   <span class="dt">test.frequencies =</span> testFreqTab,
-  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),
-  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
+  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
   <span class="dt">classification.method =</span> <span class="st">'svm'</span>,
   <span class="dt">svm.kernel =</span> <span class="st">'linear'</span>, <span class="co"># linear/polynomial/radial</span>
   <span class="dt">svm.degree =</span> <span class="dv">3</span>,
@@ -313,8 +317,7 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber
   <span class="dt">gui =</span> <span class="ot">FALSE</span>,
   <span class="dt">training.frequencies =</span> trainFreqTab,
   <span class="dt">test.frequencies =</span> testFreqTab,
-  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),
-  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
+  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
   <span class="dt">classification.method =</span> <span class="st">'naivebayes'</span>
 )</code></pre>
 </div>
@@ -324,8 +327,7 @@ freqTab[, (fNumber -<span class="st"> </span><span class="dv">50</span>):fNumber
   <span class="dt">gui =</span> <span class="ot">FALSE</span>,
   <span class="dt">training.frequencies =</span> trainFreqTab,
   <span class="dt">test.frequencies =</span> testFreqTab,
-  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),
-  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
+  <span class="dt">mfw.min =</span> <span class="kw">ncol</span>(trainFreqTab),  <span class="dt">mfw.max =</span> <span class="kw">ncol</span>(trainFreqTab),
   <span class="dt">classification.method =</span> <span class="st">'nsc'</span>
 )</code></pre>
 </div>

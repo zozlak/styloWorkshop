@@ -131,16 +131,16 @@ freqTab = count.freqs(features, relative = TRUE)
 * Limit features frequency table to a given number of features
     * take 200 most frequent ones
         ```{r, eval = FALSE}
-        freqTab[, 1:200]
+        freqTabAdj = freqTab[, 1:200]
         ```
     * take 50 less frequent one
         ```{r, eval = FALSE}
         fNumber = ncol(freqTab)
-        freqTab[, (fNumber - 50):fNumber]
+        freqTabAdj = freqTab[, (fNumber - 50):fNumber]
         ```
     * take ones from 50 to 250
         ```{r, eval = FALSE}
-        freqTab[, 50:250]
+        freqTabAdj = freqTab[, 50:250]
         ```
 * (Culling) Drop features present in less then 30% of texts 
   (limit number of features in your table first if you don't want to wait ages!)
@@ -231,6 +231,12 @@ results = stylo(
 
 (assuming that *trainFreqTab* variable holds features frequency table for the training set and *testFreqTab* holds one for the test set)
 
+Obtaining information on misclassification after running analysis:
+```{r, eval = FALSE}
+summary = paste(readLines('final_results.txt'), collapse = '\n')
+cat(summary)
+```
+
 ### Delta
 
 ```{r, eval = FALSE}
@@ -245,6 +251,7 @@ results = classify(
 )
 ```
 
+<div style="page-break-after: always;"></div>
 ### k-Nearest Neighbors
 
 ```{r, eval = FALSE}
@@ -252,8 +259,7 @@ results = classify(
   gui = FALSE,
   training.frequencies = trainFreqTab,
   test.frequencies = testFreqTab,
-  mfw.min = ncol(trainFreqTab),
-  mfw.max = ncol(trainFreqTab),
+  mfw.min = ncol(trainFreqTab),  mfw.max = ncol(trainFreqTab),
   classification.method = 'knn',
   k.value = 1 # number of neighbors taken into account
 )
@@ -266,8 +272,7 @@ results = classify(
   gui = FALSE,
   training.frequencies = trainFreqTab,
   test.frequencies = testFreqTab,
-  mfw.min = ncol(trainFreqTab),
-  mfw.max = ncol(trainFreqTab),
+  mfw.min = ncol(trainFreqTab),  mfw.max = ncol(trainFreqTab),
   classification.method = 'svm',
   svm.kernel = 'linear', # linear/polynomial/radial
   svm.degree = 3,
@@ -283,8 +288,7 @@ results = classify(
   gui = FALSE,
   training.frequencies = trainFreqTab,
   test.frequencies = testFreqTab,
-  mfw.min = ncol(trainFreqTab),
-  mfw.max = ncol(trainFreqTab),
+  mfw.min = ncol(trainFreqTab),  mfw.max = ncol(trainFreqTab),
   classification.method = 'naivebayes'
 )
 ```
@@ -296,8 +300,7 @@ results = classify(
   gui = FALSE,
   training.frequencies = trainFreqTab,
   test.frequencies = testFreqTab,
-  mfw.min = ncol(trainFreqTab),
-  mfw.max = ncol(trainFreqTab),
+  mfw.min = ncol(trainFreqTab),  mfw.max = ncol(trainFreqTab),
   classification.method = 'nsc'
 )
 ```
