@@ -1,0 +1,338 @@
+---
+title: "R introduction"
+author: "Mateusz Żółtak"
+date: "11 stycznia 2016"
+output: 
+  html_document: 
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# What is R?
+
+R can denote:
+
+* programming language
+    * the real name of the language is S (although R interpreter provides some extensions)
+    * there are many S interpreters: S-PLUS, R, RevolutionR and others
+* software for (mainly) statistical analysis
+    * https://www.r-project.org/
+    * originated as an open source interpreter of the S language
+    * most features provided by community as a so called *packages*
+* research environment
+    * *R environment* (existing packages and IDEs) allow to conduct the whole research process in one application starting from data gathering, through analysis, ending up with writing papers
+    
+# R's pros and cons
+
+Pros:
+
+* for free
+* almost all statistical methods you can imagine are available
+* R's ecosystem provides a complete research environment, e.g.
+    * powerful graphs capabilities
+    * embeding R in markdown, LaTeX or on webpages
+    * git/svn support, tests, etc for supporting reproducibility (and automation)
+* great users community
+
+Cons:
+
+* it is a programming language you have to learn  
+    * and the learning curve is said to be steep
+
+# R syntax basics
+
+We can divide language constructs into few categories:
+
+* control structures  
+  reserved grammar structures for steering program workflow
+    * e.g. *if* stucture, loops, etc.
+* operators  
+  e.g. addition (_+_), substraction (_-_), multiplication (_*_), etc.
+* variables  
+  simply a piece of data with a name
+* functions  
+  "more sophisticated operators" used to generate and/or process data
+    * from technical point of view functions in R are also variables (they are so called 1st class objects) but until you rich quite high skills in R it is far easier to think about them as something separate
+
+## Operators
+
+* Arithmetic: 
+    * basic: _+, -, *, /_
+    * power: _^_ 
+        * *2^3* gives *8*
+    * modulo division: _%%_
+        * *57 %% 10* gives *7*
+    * logical: _&, |, !_ (and, or, not)
+* Comparison:
+    * basic: _<, <=, ==, !=, >=, >_
+    * inclusion: _a %in% b_ 
+        * _1 %in% c(1, 2, 3)_ gives _TRUE_
+* Many others we will skip at the moment
+
+## Variables
+
+There are 3 main value types:
+
+* character  
+    * character values are denoted by surrounding them with quotation marks (either ' or "")  
+    * e.g. *'my strings'* or *"my string"*
+* number (in general there is no distinction between integers and floating point ones)
+    * e.g. *123* or *1.23*
+* boolean  
+    * *TRUE* or *T* and *FALSE* or *F*  
+    * later we will always use the long syntax *TRUE* or *FALSE*
+
+Each variable is:
+
+* *a vector* (an ordered set of values) of a given type
+    * even what you would call a single value in R will be a vector of length 1
+    * *c(firstValue, secondValue[, ...])* syntax is used to create a vector
+    * although for a single value you can simply put the value and R will automatically promote it to a vector (see examples)
+* or *a list* of values (where each value can be of different type)
+    * *list(firstValue, secondValue[, ...])* syntax is used to create a list
+
+**To assign a variable a *=* or *<-* operators are used** (there is no difference between them).
+
+**To display variable simply type its name.**
+
+Examples:
+```{r}
+# vector of numbers
+numbers = c(1, 2, 3)
+numbers
+# "single value" which in fact is also a vector (see below)
+singleNumber = 3
+singleNumber
+
+# strings
+strings = c('hello', 'world')
+strings
+singleString = 'world'
+singleString
+
+# booleans
+bools = c(TRUE, FALSE)
+bools
+bool = TRUE
+bool
+
+# list
+myList = list(numbers, TRUE, list(1, 'a'))
+myList
+```
+
+*Operators perform operations on whole vectors*
+```{r}
+num1 = 1:3
+num2 = 5:7
+num1
+num2
+num1 * num2
+```
+
+### More on vectors
+
+You can access given elements of a vector using their indexes.  
+You can also pass a vector of indexes.
+```{r}
+numbers = c(1, 3, 5, 7)
+numbers[2]
+numbers[c(2, 4)]
+```
+And there is a useful shorthand syntax for creating range of numbers: *from:to*, e.g.:
+```{r}
+numbers[2:4]
+```
+
+Each element of a vector can have a name.  
+Names can be assigned during vector creation or afterwords, using a *names()* function (which returns a vector of names):
+```{r}
+# assigning names during vector creation
+# (2nd element will be unnamed)
+namedVector = c(name1 = 1, 2, name3 = 3)
+namedVector
+names(namedVector)
+names(namedVector)[2] = 'missingName'
+namedVector
+```
+
+If a vector has names, you can also access its elements by names:
+```{r}
+namedVector = c(name1 = 1, name2 = 2, name3 = 3)
+namedVector[c('name1', 'name3')]
+```
+
+### More on lists
+
+You can access given elements of a list in a same way then a vector. **Returned object will be always a list.**  
+Also the same rules apply to list's elements names.
+
+```{r}
+myNamedList = list(name1 = 1:2, 5:6, name3 = c('a', 'b'))
+names(myNamedList)
+names(myNamedList) = c('n1', 'n2', 'n3')
+names(myNamedList)
+myNamedList[c(1, 3)]
+myNamedList['n2']
+```
+
+*There are two special syntaxes to fetch single element of a list as a vector:*
+```{r}
+myList = list(a = 1:2,  b = 3:4,  c = 5:6)
+# with a [[ ]]
+myList[[2]]
+# with a $name
+myList$b
+```
+
+### Matices
+
+Matrix is *a vector divided into columns*.
+
+You can create matrix using the *matrix()* function.  
+It takes a vector of values which will be splitted into columns, the number of rows and the number of columns.
+```{r}
+myMatrix = matrix(1:12, nrow = 3, ncol = 4)
+myMatrix
+```
+
+You can split vector into rows instead of columns if you want:
+```{r}
+myMatrix = matrix(1:12, nrow = 3, ncol = 4, byrow = TRUE)
+myMatrix
+```
+
+Matrix allow you to address elements using row and column indexes:
+```{r}
+myMatrix = matrix(1:12, nrow = 3, ncol = 4)
+myMatrix[1:2, 3:4]
+myMatrix[1:2, ]
+```
+
+Instead of simply _names_ matrix has _colnames_ and _rownames_.
+Matrix name can be also assigned during matrix creation or afterwords.
+```{r}
+myMatrix = matrix(1:12, nrow = 3, ncol = 4, dimnames = list(c('r1', 'r2', 'r3'), c('c1', 'c2', 'c3', 'c4')))
+myMatrix
+colnames(myMatrix) = c('col1', 'col2', 'col3', 'col4')
+myMatrix
+```
+
+R is able to perform arithmetic operations on whole matrices:
+```{r}
+matrix1 = matrix(1:4, nrow = 2, ncol = 2)
+matrix2 = matrix(5:8, nrow = 2, ncol = 2)
+matrix1
+matrix2
+matrix1 + matrix2
+```
+
+But matrix can be also threated as a normal vector:
+```{r}
+myMatrix = matrix(1:12, nrow = 3, ncol = 4, dimnames = list(c('r1', 'r2', 'r3'), c('c1', 'c2', 'c3', 'c4')))
+myMatrix
+myMatrix[c(1, 5, 7)]
+```
+
+### Data frames
+
+Data frame is like a matrix applied to a list.
+
+*If all elements of a list have exactly the same length*, we can treat it as a table displaying each element of a list as a table column.  
+You can convert a list to a data frame using _as.data.frame()_ function or use a _data.frame()_ shorthand:
+```{r}
+myList = list('a' = 1:3, b = c('a', 'b', 'c'))
+myList
+as.data.frame(myList)
+data.frame('a' = 1:3, b = c('a', 'b', 'c'))
+```
+
+Similary to matrices, you can subset data frames using rows and columns indexes/names:
+```{r}
+myDataFrame = data.frame('a' = 1:3, b = c('a', 'b', 'c'), c = 5:7)
+myDataFrame[2:3, c('a', 'c')]
+
+# be aware that if you select only one column, you will get not a data frame but a vector
+myDataFrame[2:3, c('a')]
+```
+
+And you can still access data frame's columns with the list's _$columnName_ , _[]_ and _[[]]_ operators:
+```{r}
+myDataFrame = data.frame('a' = 1:3, b = c('a', 'b', 'c'), c = 5:7)
+myDataFrame$b
+myDataFrame[2]
+myDataFrame[[2]]
+```
+
+## Functions
+
+There are to many to describe them briefly.
+
+We will learn the ones important for us during workshop.
+
+### Creating your own functions
+
+You can create your own functions using syntax:
+```{r}
+myFunction = function(param1, param2){
+  result = param1 * param2
+  # any other code goes here...
+  return(result)
+}
+myFunction(1:2, 3:4)
+```
+
+Of course your functions can take any number of parameters (also no one).
+
+If you want your function to return nothing at all, use _return(NULL)_ at the end.  
+
+## Control structures
+
+### If / else
+
+Examples should be self descriptive:
+```{r}
+if(1 == 2){
+  print('1 == 2')
+}else if(1 == 3){
+  print('1 == 3')
+}else{
+  print('else')
+}
+
+if(1 == 1){
+  print('1 == 1')
+}
+```
+
+And if you are familiar with a shorthand for _if a then b else c_ avaiable in some languages (e.g. _a ? b : c_ in C/C++/C#/Java or _b if a else c_ in Python), you should welcome R's version:
+```{r}
+ifelse(TRUE, 1, 2)
+ifelse(FALSE, 1, 2)
+
+# of course it works on vectors!
+ifelse(c(TRUE, FALSE), 1:2, 2:3)
+```
+
+### Loops
+
+There are two main loop types in R:
+
+* a *for(element in vector)* loop
+* a *while(expression)* loop
+
+Examples
+```{r}
+for(i in 1:10){
+  print(i)
+}
+
+i = 1
+while(i <= 10){
+  print(i)
+  i = i + 1
+}
+```
