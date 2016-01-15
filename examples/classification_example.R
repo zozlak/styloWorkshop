@@ -43,6 +43,26 @@ featuresAYtest = load.corpus.and.parse(
 freqTabAYtest = count.freqs(featuresAYtest, relative = TRUE)
 freqTabAYtest = freqTabAYtest[, 1:100]
 
+featuresYAlearn = load.corpus.and.parse(
+  corpus.dir = 'year_author_learning',
+  language = 'German',
+  features = 'w',
+  ngram.size = 2,
+  preserve.case = FALSE
+)
+freqTabYAlearn = count.freqs(featuresYAlearn, relative = TRUE)
+freqTabYAlearn = freqTabYAlearn[, 1:100]
+
+featuresYAtest = load.corpus.and.parse(
+  corpus.dir = 'year_author_test',
+  language = 'German',
+  features = 'w',
+  ngram.size = 2,
+  preserve.case = FALSE
+)
+freqTabYAtest = count.freqs(featuresYAtest, relative = TRUE)
+freqTabYAtest = freqTabYAtest[, 1:100]
+
 # 1) Author attribution using Delta classifier, Delta metric
 resultsAYdelta = classify(
   gui = FALSE,
