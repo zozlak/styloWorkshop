@@ -16,7 +16,7 @@ features1 = load.corpus.and.parse(
   corpus.dir = 'ca_mds_corpus',
   language = 'German',
   features = 'w',
-  ngram.size = 1,
+  ngram.size = 2,
   preserve.case = FALSE
 )
 freqTab1 = count.freqs(features1, relative = TRUE)
@@ -31,7 +31,7 @@ results1 = stylo(
   linkage = 'ward' # method of linking texts into tree ward/nj/single/complete/average/mcquitty/median/centroid
 )
 
-# 2) CA on 200 most frequent bigrams,Euclidean metric and nj linking
+# 2) CA on 200 most frequent bigrams, Euclidean metric and nj linking
 results2 = stylo(
   gui = FALSE,
   frequencies = freqTab1,

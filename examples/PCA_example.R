@@ -53,4 +53,4 @@ results2 = stylo(
 
 # Questions:
 # - Can we give a name to the 1st or 2nd component?
-# - Are this results similar or differnt?
+# - Are these results similar or differnt?
